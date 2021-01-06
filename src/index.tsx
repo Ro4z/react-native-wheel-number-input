@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
@@ -8,10 +8,6 @@ import {
   View,
 } from "react-native";
 
-const tmp: number[] = [];
-for (let i = 0; i < 5; i++) {
-  tmp.push(i + 1);
-}
 const HEIGHT = 60;
 
 type WheelNumberPickerProps = {
@@ -35,12 +31,12 @@ function WheelNumberPicker({
   };
 
   useEffect(() => {
-    if (!flatListRef.current) return;
-
-    // scrollViewRef.current.scrollTo({
-    //   y: (HEIGHT * data.length) / 2,
-    //   animated: false,
-    // });
+    if (maxValue < minValue) maxValue = minValue;
+    const tmpArray = [];
+    for (let i = minValue; i <= maxValue; i++) {
+      tmpArray.push(i);
+    }
+    setData(tmpArray);
   }, []);
 
   return (
@@ -53,7 +49,7 @@ function WheelNumberPicker({
         onScroll={onScroll}
         scrollEventThrottle={1000}
         decelerationRate="fast"
-        initialScrollIndex={tmp.length / 2}
+        initialScrollIndex={0}
         ref={flatListRef}
         keyExtractor={(item, index) => index.toString()}
         getItemLayout={(data, index) => ({
