@@ -2,30 +2,31 @@ import React, { useEffect, useRef, useState } from "react";
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
-  ScrollView,
   FlatList,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 
-let tmp: number[] = [];
-for (var i = 0; i < 5; i++) {
+const tmp: number[] = [];
+for (let i = 0; i < 5; i++) {
   tmp.push(i + 1);
 }
 const HEIGHT = 60;
 function RNWheelNumberPicker() {
   const [data, setData] = useState([...tmp.slice(tmp.length / 2), ...tmp]);
-  const scrollViewRef: React.MutableRefObject<FlatList | null> = useRef(null);
+  const flatListRef: React.MutableRefObject<FlatList | null> = useRef(null);
 
   const onScroll = ({
     nativeEvent,
   }: NativeSyntheticEvent<NativeScrollEvent>) => {
     console.log(nativeEvent.contentOffset.y);
+
+    if (false) setData([...data, ...data.slice(data.length / 2)]);
   };
 
   useEffect(() => {
-    if (!scrollViewRef.current) return;
+    if (!flatListRef.current) return;
 
     // scrollViewRef.current.scrollTo({
     //   y: (HEIGHT * data.length) / 2,
@@ -44,7 +45,7 @@ function RNWheelNumberPicker() {
         scrollEventThrottle={1000}
         decelerationRate="fast"
         initialScrollIndex={tmp.length / 2}
-        ref={scrollViewRef}
+        ref={flatListRef}
         keyExtractor={(item, index) => index.toString()}
         getItemLayout={(data, index) => ({
           length: HEIGHT,
