@@ -13,8 +13,17 @@ for (let i = 0; i < 5; i++) {
   tmp.push(i + 1);
 }
 const HEIGHT = 60;
-function RNWheelNumberPicker() {
-  const [data, setData] = useState([...tmp.slice(tmp.length / 2), ...tmp]);
+
+type WheelNumberPickerProps = {
+  minValue: number;
+  maxValue: number;
+};
+
+function WheelNumberPicker({
+  minValue = 1,
+  maxValue = 5,
+}: WheelNumberPickerProps): ReactElement {
+  const [data, setData] = useState<number[]>([]);
   const flatListRef: React.MutableRefObject<FlatList | null> = useRef(null);
 
   const onScroll = ({
@@ -72,7 +81,7 @@ function RNWheelNumberPicker() {
   );
 }
 
-export default RNWheelNumberPicker;
+export default WheelNumberPicker;
 
 const styles = StyleSheet.create({
   mainContainer: {
