@@ -1,134 +1,82 @@
-import React, { ReactElement, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   NativeScrollEvent,
   NativeSyntheticEvent,
+  ScrollView,
   FlatList,
   StyleSheet,
   Text,
   View,
 } from "react-native";
 
-// TODO: change const to props
-const HEIGHT_OF_ITEM = 60;
-const HEIGHT_OF_LIST = 210;
-
-type WheelNumberPickerProps = {
-  minValue: number;
-  maxValue: number;
-};
-
-function WheelNumberPicker({
-  minValue = 1,
-  maxValue = 5,
-}: WheelNumberPickerProps): ReactElement {
-  const [data, setData] = useState<number[]>([]);
-  const flatListRef = useRef<FlatList>(null);
-  const currentYOffset = useRef(0);
-  const initialOffset = useRef<number>(
-    (maxValue - minValue + 2) * HEIGHT_OF_ITEM -
-      (HEIGHT_OF_LIST % HEIGHT_OF_ITEM) / 2
-  );
+let tmp: number[] = [];
+for (var i = 0; i < 5; i++) {
+  tmp.push(i + 1);
+}
+const HEIGHT = 60;
+function RNWheelNumberPicker() {
+  const [data, setData] = useState([...tmp.slice(tmp.length / 2), ...tmp]);
+  const scrollViewRef: React.MutableRefObject<FlatList | null> = useRef(null);
 
   const onScroll = ({
     nativeEvent,
   }: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetY = nativeEvent.contentOffset.y;
-
-    if (offsetY < currentYOffset.current) {
-      if (offsetY <= initialOffset.current - HEIGHT_OF_ITEM) {
-        flatListRef.current?.scrollToOffset({
-          offset: offsetY + HEIGHT_OF_ITEM * (maxValue - minValue + 1),
-          animated: false,
-        });
-        currentYOffset.current =
-          offsetY + HEIGHT_OF_ITEM * (maxValue - minValue + 1);
-        return;
-      }
-    }
-
-    if (offsetY > currentYOffset.current) {
-      if (offsetY > initialOffset.current + HEIGHT_OF_ITEM) {
-        flatListRef.current?.scrollToOffset({
-          offset: offsetY - HEIGHT_OF_ITEM * (maxValue - minValue + 1),
-          animated: false,
-        });
-        currentYOffset.current =
-          offsetY - HEIGHT_OF_ITEM * (maxValue - minValue + 1);
-        return;
-      }
-    }
-
-    currentYOffset.current = offsetY;
+    console.log(nativeEvent.contentOffset.y);
   };
 
-  // initialize number array
   useEffect(() => {
-    const arr = [];
-    for (let i = minValue; i <= maxValue; i++) {
-      arr.push(i);
-    }
-    setData([...arr, ...arr, ...arr]);
+    if (!scrollViewRef.current) return;
+
+    // scrollViewRef.current.scrollTo({
+    //   y: (HEIGHT * data.length) / 2,
+    //   animated: false,
+    // });
   }, []);
 
-  useEffect(() => {
-    if (data.length === 0) return;
-    flatListRef.current?.scrollToOffset({
-      offset: initialOffset.current,
-      animated: false,
-    });
-    currentYOffset.current = initialOffset.current;
-  }, [data.length === 0]);
-
   return (
-    <>
-      <View>
-        <Text>current offset: {currentYOffset.current}</Text>
-      </View>
-      <View style={styles.mainContainer}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          snapToAlignment="center"
-          data={data}
-          snapToInterval={HEIGHT_OF_ITEM}
-          onScroll={onScroll}
-          scrollEventThrottle={16}
-          decelerationRate="fast"
-          initialScrollIndex={0}
-          ref={flatListRef}
-          keyExtractor={(item, index) => index.toString()}
-          getItemLayout={(data, index) => ({
-            length: HEIGHT_OF_ITEM,
-            offset: HEIGHT_OF_ITEM * index,
-            index,
-          })}
-          renderItem={({ item }) => {
-            return (
-              <View
-                style={{
-                  width: "100%",
-                  height: HEIGHT_OF_ITEM,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderBottomWidth: 1,
-                }}
-              >
-                <Text>{item}</Text>
-              </View>
-            );
-          }}
-        />
-      </View>
-    </>
+    <View style={styles.mainContainer}>
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        snapToAlignment="center"
+        data={data}
+        snapToInterval={HEIGHT}
+        onScroll={onScroll}
+        scrollEventThrottle={1000}
+        decelerationRate="fast"
+        initialScrollIndex={tmp.length / 2}
+        ref={scrollViewRef}
+        keyExtractor={(item, index) => index.toString()}
+        getItemLayout={(data, index) => ({
+          length: HEIGHT,
+          offset: HEIGHT * index,
+          index,
+        })}
+        renderItem={({ item }) => {
+          return (
+            <View
+              style={{
+                width: "100%",
+                height: HEIGHT,
+                alignItems: "center",
+                justifyContent: "center",
+                borderBottomWidth: 1,
+              }}
+            >
+              <Text>{item}</Text>
+            </View>
+          );
+        }}
+      />
+    </View>
   );
 }
 
-export default WheelNumberPicker;
+export default RNWheelNumberPicker;
 
-// TODO: change to props
 const styles = StyleSheet.create({
   mainContainer: {
     width: 100,
-    height: HEIGHT_OF_LIST,
+    height: 210,
     backgroundColor: "white",
   },
 });
