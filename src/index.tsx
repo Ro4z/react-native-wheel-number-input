@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 
+// TODO: change const to props
 const HEIGHT_OF_ITEM = 60;
 const HEIGHT_OF_LIST = 210;
 
@@ -123,6 +124,7 @@ function WheelNumberPicker({
 
 export default WheelNumberPicker;
 
+// TODO: change to props
 const styles = StyleSheet.create({
   mainContainer: {
     width: 100,
