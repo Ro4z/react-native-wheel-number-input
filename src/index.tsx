@@ -104,7 +104,7 @@ function WheelNumberPicker({
           scrollEventThrottle={16}
           decelerationRate="fast"
           initialScrollIndex={0}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => `WNPicker_${index.toString()}`}
           getItemLayout={(data, index) => ({
             length: HEIGHT_OF_ITEM,
             offset: HEIGHT_OF_ITEM * index,
