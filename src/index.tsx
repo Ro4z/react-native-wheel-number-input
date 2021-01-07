@@ -10,7 +10,7 @@ import {
 
 // TODO: change const to props
 const HEIGHT_OF_ITEM = 60;
-const HEIGHT_OF_LIST = 210;
+const HEIGHT_OF_LIST = HEIGHT_OF_ITEM * 2.2;
 
 type WheelNumberPickerProps = {
   minValue: number;
@@ -26,7 +26,7 @@ function WheelNumberPicker({
   const currentYOffset = useRef<number>(0);
   const numberOfValue = useRef<number>(maxValue - minValue + 1);
   const initialOffset = useRef<number>(
-    (maxValue - minValue + 2) * HEIGHT_OF_ITEM -
+    (maxValue - minValue + 0.5) * HEIGHT_OF_ITEM -
       (HEIGHT_OF_LIST % HEIGHT_OF_ITEM) / 2
   );
 
