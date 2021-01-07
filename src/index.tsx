@@ -21,70 +21,108 @@ function WheelNumberPicker({
   maxValue = 5,
 }: WheelNumberPickerProps): ReactElement {
   const [data, setData] = useState<number[]>([]);
-  const flatListRef: React.MutableRefObject<FlatList | null> = useRef(null);
+  const flatListRef = useRef<FlatList>(null);
+  const currentYOffset = useRef(0);
+  const numberArray = useRef<number[]>([]);
+  const initialOffset = useRef<number>(
+    (maxValue - minValue + 2) * HEIGHT_OF_ITEM -
+      (HEIGHT_OF_LIST % HEIGHT_OF_ITEM) / 2
+  );
 
   const onScroll = ({
     nativeEvent,
   }: NativeSyntheticEvent<NativeScrollEvent>) => {
-    console.log("y offset::>>", nativeEvent.contentOffset.y);
+    const offsetY = nativeEvent.contentOffset.y;
+
+    if (offsetY < currentYOffset.current) {
+      if (offsetY <= initialOffset.current - HEIGHT_OF_ITEM) {
+        flatListRef.current?.scrollToOffset({
+          offset: offsetY + HEIGHT_OF_ITEM * (maxValue - minValue + 1),
+          animated: false,
+        });
+        currentYOffset.current =
+          offsetY + HEIGHT_OF_ITEM * (maxValue - minValue + 1);
+        return;
+      }
+    }
+
+    if (offsetY > currentYOffset.current) {
+      if (offsetY > initialOffset.current + HEIGHT_OF_ITEM) {
+        flatListRef.current?.scrollToOffset({
+          offset: offsetY - HEIGHT_OF_ITEM * (maxValue - minValue + 1),
+          animated: false,
+        });
+        currentYOffset.current =
+          offsetY - HEIGHT_OF_ITEM * (maxValue - minValue + 1);
+        return;
+      }
+    }
+
+    currentYOffset.current = offsetY;
   };
 
   // initialize number array
   useEffect(() => {
-    const tmp = [];
+    const arr = [];
     for (let i = minValue; i <= maxValue; i++) {
-      tmp.push(i);
+      arr.push(i);
     }
-    setData([...tmp, ...tmp, ...tmp]);
+    setData([...arr, ...arr, ...arr]);
   }, []);
 
   useEffect(() => {
     if (data.length === 0) return;
-    const LENGTH = maxValue - minValue + 1;
-    const OFFSET =
-      (LENGTH + 1) * HEIGHT_OF_ITEM - (HEIGHT_OF_LIST % HEIGHT_OF_ITEM) / 2;
-    console.log("OFFSET", OFFSET);
+    const length = maxValue - minValue + 1;
+    const offset =
+      (length + 1) * HEIGHT_OF_ITEM - (HEIGHT_OF_LIST % HEIGHT_OF_ITEM) / 2;
+
     flatListRef.current?.scrollToOffset({
-      offset: OFFSET,
+      offset: offset,
       animated: false,
     });
-  }, [data]);
+    currentYOffset.current = offset;
+  }, [data.length === 0]);
 
   return (
-    <View style={styles.mainContainer}>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        snapToAlignment="center"
-        data={data}
-        snapToInterval={HEIGHT_OF_ITEM}
-        onScroll={onScroll}
-        scrollEventThrottle={1000}
-        decelerationRate="fast"
-        initialScrollIndex={0}
-        ref={flatListRef}
-        keyExtractor={(item, index) => index.toString()}
-        getItemLayout={(data, index) => ({
-          length: HEIGHT_OF_ITEM,
-          offset: HEIGHT_OF_ITEM * index,
-          index,
-        })}
-        renderItem={({ item }) => {
-          return (
-            <View
-              style={{
-                width: "100%",
-                height: HEIGHT_OF_ITEM,
-                alignItems: "center",
-                justifyContent: "center",
-                borderBottomWidth: 1,
-              }}
-            >
-              <Text>{item}</Text>
-            </View>
-          );
-        }}
-      />
-    </View>
+    <>
+      <View>
+        <Text>current offset: {currentYOffset.current}</Text>
+      </View>
+      <View style={styles.mainContainer}>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          snapToAlignment="center"
+          data={data}
+          snapToInterval={HEIGHT_OF_ITEM}
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+          decelerationRate="fast"
+          initialScrollIndex={0}
+          ref={flatListRef}
+          keyExtractor={(item, index) => index.toString()}
+          getItemLayout={(data, index) => ({
+            length: HEIGHT_OF_ITEM,
+            offset: HEIGHT_OF_ITEM * index,
+            index,
+          })}
+          renderItem={({ item }) => {
+            return (
+              <View
+                style={{
+                  width: "100%",
+                  height: HEIGHT_OF_ITEM,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderBottomWidth: 1,
+                }}
+              >
+                <Text>{item}</Text>
+              </View>
+            );
+          }}
+        />
+      </View>
+    </>
   );
 }
 
