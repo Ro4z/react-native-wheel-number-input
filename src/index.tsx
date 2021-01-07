@@ -23,7 +23,6 @@ function WheelNumberPicker({
   const [data, setData] = useState<number[]>([]);
   const flatListRef = useRef<FlatList>(null);
   const currentYOffset = useRef(0);
-  const numberArray = useRef<number[]>([]);
   const initialOffset = useRef<number>(
     (maxValue - minValue + 2) * HEIGHT_OF_ITEM -
       (HEIGHT_OF_LIST % HEIGHT_OF_ITEM) / 2
@@ -72,15 +71,11 @@ function WheelNumberPicker({
 
   useEffect(() => {
     if (data.length === 0) return;
-    const length = maxValue - minValue + 1;
-    const offset =
-      (length + 1) * HEIGHT_OF_ITEM - (HEIGHT_OF_LIST % HEIGHT_OF_ITEM) / 2;
-
     flatListRef.current?.scrollToOffset({
-      offset: offset,
+      offset: initialOffset.current,
       animated: false,
     });
-    currentYOffset.current = offset;
+    currentYOffset.current = initialOffset.current;
   }, [data.length === 0]);
 
   return (
