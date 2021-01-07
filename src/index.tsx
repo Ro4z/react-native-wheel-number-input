@@ -23,7 +23,8 @@ function WheelNumberPicker({
 }: WheelNumberPickerProps): ReactElement {
   const [data, setData] = useState<number[]>([]);
   const flatListRef = useRef<FlatList>(null);
-  const currentYOffset = useRef(0);
+  const currentYOffset = useRef<number>(0);
+  const numberOfValue = useRef<number>(maxValue - minValue + 1);
   const initialOffset = useRef<number>(
     (maxValue - minValue + 2) * HEIGHT_OF_ITEM -
       (HEIGHT_OF_LIST % HEIGHT_OF_ITEM) / 2
@@ -35,7 +36,10 @@ function WheelNumberPicker({
     const offsetY = nativeEvent.contentOffset.y;
 
     if (offsetY < currentYOffset.current) {
-      if (offsetY <= initialOffset.current - HEIGHT_OF_ITEM) {
+      if (
+        offsetY <=
+        initialOffset.current - (HEIGHT_OF_ITEM * numberOfValue.current) / 2
+      ) {
         flatListRef.current?.scrollToOffset({
           offset: offsetY + HEIGHT_OF_ITEM * (maxValue - minValue + 1),
           animated: false,
@@ -47,7 +51,10 @@ function WheelNumberPicker({
     }
 
     if (offsetY > currentYOffset.current) {
-      if (offsetY > initialOffset.current + HEIGHT_OF_ITEM) {
+      if (
+        offsetY >
+        initialOffset.current + (HEIGHT_OF_ITEM * numberOfValue.current) / 2
+      ) {
         flatListRef.current?.scrollToOffset({
           offset: offsetY - HEIGHT_OF_ITEM * (maxValue - minValue + 1),
           animated: false,
