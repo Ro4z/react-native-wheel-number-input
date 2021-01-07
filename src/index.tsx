@@ -30,6 +30,25 @@ function WheelNumberPicker({
       (HEIGHT_OF_LIST % HEIGHT_OF_ITEM) / 2
   );
 
+  // initialize number array
+  useEffect(() => {
+    const arr = [];
+    for (let i = minValue; i <= maxValue; i++) {
+      arr.push(i);
+    }
+    setData([...arr, ...arr, ...arr]);
+  }, []);
+
+  // set offset in center of list when rendered
+  useEffect(() => {
+    if (data.length === 0) return;
+    flatListRef.current?.scrollToOffset({
+      offset: initialOffset.current,
+      animated: false,
+    });
+    currentYOffset.current = initialOffset.current;
+  }, [data.length === 0]);
+
   const onScroll = ({
     nativeEvent,
   }: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -38,7 +57,7 @@ function WheelNumberPicker({
     if (offsetY < currentYOffset.current) {
       if (
         offsetY <=
-        initialOffset.current - (HEIGHT_OF_ITEM * numberOfValue.current) / 2
+        initialOffset.current - HEIGHT_OF_ITEM * (numberOfValue.current / 2)
       ) {
         flatListRef.current?.scrollToOffset({
           offset: offsetY + HEIGHT_OF_ITEM * (maxValue - minValue + 1),
@@ -46,6 +65,7 @@ function WheelNumberPicker({
         });
         currentYOffset.current =
           offsetY + HEIGHT_OF_ITEM * (maxValue - minValue + 1);
+        setTmp(currentYOffset.current);
         return;
       }
     }
@@ -53,7 +73,7 @@ function WheelNumberPicker({
     if (offsetY > currentYOffset.current) {
       if (
         offsetY >
-        initialOffset.current + (HEIGHT_OF_ITEM * numberOfValue.current) / 2
+        initialOffset.current + HEIGHT_OF_ITEM * (numberOfValue.current / 2)
       ) {
         flatListRef.current?.scrollToOffset({
           offset: offsetY - HEIGHT_OF_ITEM * (maxValue - minValue + 1),
@@ -68,24 +88,6 @@ function WheelNumberPicker({
     currentYOffset.current = offsetY;
   };
 
-  // initialize number array
-  useEffect(() => {
-    const arr = [];
-    for (let i = minValue; i <= maxValue; i++) {
-      arr.push(i);
-    }
-    setData([...arr, ...arr, ...arr]);
-  }, []);
-
-  useEffect(() => {
-    if (data.length === 0) return;
-    flatListRef.current?.scrollToOffset({
-      offset: initialOffset.current,
-      animated: false,
-    });
-    currentYOffset.current = initialOffset.current;
-  }, [data.length === 0]);
-
   return (
     <>
       <View>
@@ -93,15 +95,15 @@ function WheelNumberPicker({
       </View>
       <View style={styles.mainContainer}>
         <FlatList
+          data={data}
+          onScroll={onScroll}
+          ref={flatListRef}
           showsVerticalScrollIndicator={false}
           snapToAlignment="center"
-          data={data}
           snapToInterval={HEIGHT_OF_ITEM}
-          onScroll={onScroll}
           scrollEventThrottle={16}
           decelerationRate="fast"
           initialScrollIndex={0}
-          ref={flatListRef}
           keyExtractor={(item, index) => index.toString()}
           getItemLayout={(data, index) => ({
             length: HEIGHT_OF_ITEM,
