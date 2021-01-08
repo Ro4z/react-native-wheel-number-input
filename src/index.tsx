@@ -56,7 +56,7 @@ function WheelNumberPicker({
       animated: false,
     });
     currentYOffset.current = initialOffset.current;
-  }, [data.length === 0]);
+  }, [!!data]);
 
   useEffect(() => {
     if (!onValueChange) return;
