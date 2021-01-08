@@ -12,14 +12,17 @@ import {
 const HEIGHT_OF_ITEM = 60;
 const HEIGHT_OF_LIST = HEIGHT_OF_ITEM * 2.2;
 
+// TODO: add selectedValue props
 type WheelNumberPickerProps = {
   minValue: number;
   maxValue: number;
+  onValueChange?: (value: number) => void;
 };
 
 function WheelNumberPicker({
   minValue = 1,
   maxValue = 5,
+  onValueChange,
 }: WheelNumberPickerProps): ReactElement {
   const [data, setData] = useState<number[]>([]);
   const [value, setValue] = useState<number>(minValue);
@@ -32,7 +35,6 @@ function WheelNumberPicker({
       (HEIGHT_OF_LIST % HEIGHT_OF_ITEM) / 2
   );
 
-  const [tmp, setTmp] = useState(0);
   // initialize number array
   useEffect(() => {
     valueArray.current = [];
@@ -55,6 +57,11 @@ function WheelNumberPicker({
     });
     currentYOffset.current = initialOffset.current;
   }, [data.length === 0]);
+
+  useEffect(() => {
+    if (!onValueChange) return;
+    onValueChange(value);
+  }, [value]);
 
   // FIXME: not snap to center when scrollToOffset sometime
   const onScroll = ({
@@ -97,9 +104,7 @@ function WheelNumberPicker({
 
   return (
     <>
-      <View>
-        <Text>selected value: {value}</Text>
-      </View>
+      <View>{/* <Text>selected value: {value}</Text> */}</View>
       <View style={styles.mainContainer}>
         <FlatList
           data={data}
