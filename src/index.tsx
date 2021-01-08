@@ -16,16 +16,18 @@ const HEIGHT_OF_LIST = HEIGHT_OF_ITEM * 2.2;
 type WheelNumberPickerProps = {
   minValue: number;
   maxValue: number;
+  selectedValue?: number;
   onValueChange?: (value: number) => void;
 };
 
 function WheelNumberPicker({
   minValue = 1,
   maxValue = 5,
+  selectedValue,
   onValueChange,
 }: WheelNumberPickerProps): ReactElement {
   const [data, setData] = useState<number[]>([]);
-  const [value, setValue] = useState<number>(minValue);
+  const [value, setValue] = useState<number>(selectedValue || minValue);
   const flatListRef = useRef<FlatList>(null);
   const currentYOffset = useRef<number>(0);
   const valueArray = useRef<number[]>([]);
@@ -51,13 +53,22 @@ function WheelNumberPicker({
   // set offset in center of list when rendered
   useEffect(() => {
     if (data.length === 0) return;
+    let offset = initialOffset.current;
+    if (selectedValue) {
+      const selectedValueIndex = valueArray.current.indexOf(selectedValue);
+      if (selectedValueIndex !== -1) {
+        offset += HEIGHT_OF_ITEM * selectedValueIndex;
+      }
+    }
+
     flatListRef.current?.scrollToOffset({
-      offset: initialOffset.current,
+      offset: offset,
       animated: false,
     });
     currentYOffset.current = initialOffset.current;
   }, [!!data]);
 
+  // for onValueChange props
   useEffect(() => {
     if (!onValueChange) return;
     onValueChange(value);
