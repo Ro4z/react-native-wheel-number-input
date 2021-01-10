@@ -144,7 +144,11 @@ function WheelNumberPicker({
                   borderBottomWidth: 1,
                 }}
               >
-                <Text style={styles.number}>{item}</Text>
+                {item === value ? (
+                  <Text style={[styles.number]}>{item}</Text>
+                ) : (
+                  <Text style={[styles.number, { color: "gray" }]}>{item}</Text>
+                )}
               </View>
             );
           }}
