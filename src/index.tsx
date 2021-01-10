@@ -81,8 +81,10 @@ function WheelNumberPicker({
     const offsetY = nativeEvent.contentOffset.y;
     let index = Math.ceil((offsetY % initialOffset.current) / HEIGHT_OF_ITEM);
     index = index < numberOfValue.current ? index : numberOfValue.current - 1;
-    const value = valueArray.current[index];
-    setValue(value);
+    const selectedValue = valueArray.current[index];
+    if (value !== selectedValue) {
+      setValue(selectedValue);
+    }
 
     if (offsetY < currentYOffset.current) {
       if (offsetY <= initialOffset.current - HEIGHT_OF_ITEM) {
