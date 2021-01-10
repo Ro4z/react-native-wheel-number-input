@@ -79,11 +79,9 @@ function WheelNumberPicker({
     nativeEvent,
   }: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = nativeEvent.contentOffset.y;
-    const index = Math.ceil((offsetY % initialOffset.current) / HEIGHT_OF_ITEM);
-    const value =
-      valueArray.current[
-        index < numberOfValue.current ? index : numberOfValue.current - 1
-      ];
+    let index = Math.ceil((offsetY % initialOffset.current) / HEIGHT_OF_ITEM);
+    index = index < numberOfValue.current ? index : numberOfValue.current - 1;
+    const value = valueArray.current[index];
     setValue(value);
 
     if (offsetY < currentYOffset.current) {
