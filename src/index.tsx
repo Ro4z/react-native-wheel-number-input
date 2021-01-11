@@ -3,31 +3,33 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   FlatList,
-  StyleSheet,
   Text,
   View,
   StyleProp,
   TextStyle,
   ViewStyle,
-  FlexStyle,
 } from "react-native";
 
-type WheelNumberPickerProps = {
+interface WheelNumberPickerProps {
   minValue: number;
   maxValue: number;
   height: number;
   textStyle?: StyleProp<TextStyle>;
+  selectedTextStyle?: StyleProp<TextStyle>;
+  unselectedTextStyle?: StyleProp<TextStyle>;
   dividerWidth?: ViewStyle["borderBottomWidth"];
   dividerColor?: ViewStyle["borderBottomColor"];
   selectedValue?: number;
   onValueChange?: (value: number) => void;
-};
+}
 
 function WheelNumberPicker({
   minValue = 1,
   maxValue = 5,
   height = 25,
   textStyle,
+  selectedTextStyle,
+  unselectedTextStyle,
   dividerWidth = 1,
   dividerColor,
   selectedValue,
@@ -118,7 +120,23 @@ function WheelNumberPicker({
 
   return (
     <>
-      <View>{/* <Text>selected value: {value}</Text> */}</View>
+      {/* view component for picker divider */}
+      <View
+        style={{
+          position: "absolute",
+        }}
+      >
+        <View
+          style={{
+            marginTop: height / 1.5,
+            borderTopWidth: dividerWidth,
+            borderBottomWidth: dividerWidth,
+            borderColor: dividerColor,
+            height: height,
+            width: height * 1.2,
+          }}
+        />
+      </View>
       <View style={{ width: height * 1.2, height: height * 2 }}>
         <FlatList
           data={data}
@@ -144,14 +162,20 @@ function WheelNumberPicker({
                   height: height,
                   alignItems: "center",
                   justifyContent: "center",
-                  borderBottomWidth: dividerWidth,
-                  borderBottomColor: dividerColor,
                 }}
               >
                 {item === value ? (
-                  <Text style={textStyle}>{item}</Text>
+                  <Text style={[textStyle, selectedTextStyle]}>{item}</Text>
                 ) : (
-                  <Text style={[textStyle, { color: "gray" }]}>{item}</Text>
+                  <Text
+                    style={[
+                      textStyle,
+                      { color: "rgba(200,200,200,0.6)" },
+                      unselectedTextStyle,
+                    ]}
+                  >
+                    {item}
+                  </Text>
                 )}
               </View>
             );
