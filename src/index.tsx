@@ -10,7 +10,7 @@ import {
   ViewStyle,
 } from "react-native";
 
-type WheelNumberPickerProps = {
+interface WheelNumberPickerProps {
   minValue: number;
   maxValue: number;
   height: number;
@@ -21,7 +21,7 @@ type WheelNumberPickerProps = {
   dividerColor?: ViewStyle["borderBottomColor"];
   selectedValue?: number;
   onValueChange?: (value: number) => void;
-};
+}
 
 function WheelNumberPicker({
   minValue = 1,
