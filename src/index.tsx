@@ -8,6 +8,8 @@ import {
   View,
   StyleProp,
   TextStyle,
+  ViewStyle,
+  FlexStyle,
 } from "react-native";
 
 type WheelNumberPickerProps = {
@@ -15,6 +17,8 @@ type WheelNumberPickerProps = {
   maxValue: number;
   height: number;
   textStyle?: StyleProp<TextStyle>;
+  dividerWidth?: ViewStyle["borderBottomWidth"];
+  dividerColor?: ViewStyle["borderBottomColor"];
   selectedValue?: number;
   onValueChange?: (value: number) => void;
 };
@@ -24,6 +28,8 @@ function WheelNumberPicker({
   maxValue = 5,
   height = 25,
   textStyle,
+  dividerWidth = 1,
+  dividerColor,
   selectedValue,
   onValueChange,
 }: WheelNumberPickerProps): ReactElement {
@@ -138,7 +144,8 @@ function WheelNumberPicker({
                   height: height,
                   alignItems: "center",
                   justifyContent: "center",
-                  borderBottomWidth: 1,
+                  borderBottomWidth: dividerWidth,
+                  borderBottomColor: dividerColor,
                 }}
               >
                 {item === value ? (
@@ -156,11 +163,3 @@ function WheelNumberPicker({
 }
 
 export default WheelNumberPicker;
-
-// TODO: change to props
-const styles = StyleSheet.create({
-  mainContainer: {},
-  number: {
-    fontSize: 24,
-  },
-});
