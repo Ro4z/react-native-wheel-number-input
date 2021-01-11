@@ -170,7 +170,9 @@ function WheelNumberPicker({
                 {item === value ? (
                   <Text style={textStyle}>{item}</Text>
                 ) : (
-                  <Text style={[textStyle, { color: "gray" }]}>{item}</Text>
+                  <Text style={[textStyle, { color: "rgba(200,200,200,0.6)" }]}>
+                    {item}
+                  </Text>
                 )}
               </View>
             );
