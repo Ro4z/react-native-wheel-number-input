@@ -3,13 +3,11 @@ import {
   NativeScrollEvent,
   NativeSyntheticEvent,
   FlatList,
-  StyleSheet,
   Text,
   View,
   StyleProp,
   TextStyle,
   ViewStyle,
-  FlexStyle,
 } from "react-native";
 
 type WheelNumberPickerProps = {
@@ -118,13 +116,9 @@ function WheelNumberPicker({
 
   return (
     <>
-      <View>{/* <Text>selected value: {value}</Text> */}</View>
+      {/* view component for picker divider */}
       <View
         style={{
-          // borderWidth: 1,
-          // height: height,
-          // width: height * 1.2,
-
           position: "absolute",
         }}
       >
@@ -137,7 +131,7 @@ function WheelNumberPicker({
             height: height,
             width: height * 1.2,
           }}
-        ></View>
+        />
       </View>
       <View style={{ width: height * 1.2, height: height * 2 }}>
         <FlatList
@@ -164,8 +158,6 @@ function WheelNumberPicker({
                   height: height,
                   alignItems: "center",
                   justifyContent: "center",
-                  // borderBottomWidth: dividerWidth,
-                  // borderBottomColor: dividerColor,
                 }}
               >
                 {item === value ? (
