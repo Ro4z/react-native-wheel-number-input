@@ -10,7 +10,7 @@ import {
 
 // TODO: change const to props
 const HEIGHT_OF_ITEM = 60;
-const HEIGHT_OF_LIST = HEIGHT_OF_ITEM * 2.2;
+const HEIGHT_OF_LIST = HEIGHT_OF_ITEM * 2;
 
 // TODO: add selectedValue props
 type WheelNumberPickerProps = {
