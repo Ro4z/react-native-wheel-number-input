@@ -8,14 +8,10 @@ import {
   View,
 } from "react-native";
 
-// TODO: change const to props
-const HEIGHT_OF_ITEM = 60;
-const HEIGHT_OF_LIST = HEIGHT_OF_ITEM * 2;
-
-// TODO: add selectedValue props
 type WheelNumberPickerProps = {
   minValue: number;
   maxValue: number;
+  height: number;
   selectedValue?: number;
   onValueChange?: (value: number) => void;
 };
@@ -23,19 +19,18 @@ type WheelNumberPickerProps = {
 function WheelNumberPicker({
   minValue = 1,
   maxValue = 5,
+  height = 60,
   selectedValue,
   onValueChange,
 }: WheelNumberPickerProps): ReactElement {
   const [data, setData] = useState<number[]>([]);
   const [value, setValue] = useState<number>(selectedValue || minValue);
+
   const flatListRef = useRef<FlatList>(null);
   const currentYOffset = useRef<number>(0);
   const valueArray = useRef<number[]>([]);
   const numberOfValue = useRef<number>(maxValue - minValue + 1);
-  const initialOffset = useRef<number>(
-    (maxValue - minValue + 0.5) * HEIGHT_OF_ITEM -
-      (HEIGHT_OF_LIST % HEIGHT_OF_ITEM) / 2
-  );
+  const initialOffset = useRef<number>((maxValue - minValue + 0.5) * height);
 
   // initialize number array
   useEffect(() => {
@@ -57,7 +52,7 @@ function WheelNumberPicker({
     if (selectedValue) {
       const selectedValueIndex = valueArray.current.indexOf(selectedValue);
       if (selectedValueIndex !== -1) {
-        offset += HEIGHT_OF_ITEM * selectedValueIndex;
+        offset += height * selectedValueIndex;
       }
     }
 
@@ -79,7 +74,7 @@ function WheelNumberPicker({
     nativeEvent,
   }: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = nativeEvent.contentOffset.y;
-    let index = Math.ceil((offsetY % initialOffset.current) / HEIGHT_OF_ITEM);
+    let index = Math.ceil((offsetY % initialOffset.current) / height);
     index = index < numberOfValue.current ? index : numberOfValue.current - 1;
     const selectedValue = valueArray.current[index];
     if (value !== selectedValue) {
@@ -87,25 +82,23 @@ function WheelNumberPicker({
     }
 
     if (offsetY < currentYOffset.current) {
-      if (offsetY <= initialOffset.current - HEIGHT_OF_ITEM) {
+      if (offsetY <= initialOffset.current - height) {
         flatListRef.current?.scrollToOffset({
-          offset: offsetY + HEIGHT_OF_ITEM * (maxValue - minValue + 1),
+          offset: offsetY + height * (maxValue - minValue + 1),
           animated: false,
         });
-        currentYOffset.current =
-          offsetY + HEIGHT_OF_ITEM * (maxValue - minValue + 1);
+        currentYOffset.current = offsetY + height * (maxValue - minValue + 1);
         return;
       }
     }
 
     if (offsetY > currentYOffset.current) {
-      if (offsetY > initialOffset.current + HEIGHT_OF_ITEM) {
+      if (offsetY > initialOffset.current + height) {
         flatListRef.current?.scrollToOffset({
-          offset: offsetY - HEIGHT_OF_ITEM * (maxValue - minValue + 1),
+          offset: offsetY - height * (maxValue - minValue + 1),
           animated: false,
         });
-        currentYOffset.current =
-          offsetY - HEIGHT_OF_ITEM * (maxValue - minValue + 1);
+        currentYOffset.current = offsetY - height * (maxValue - minValue + 1);
         return;
       }
     }
@@ -116,21 +109,21 @@ function WheelNumberPicker({
   return (
     <>
       <View>{/* <Text>selected value: {value}</Text> */}</View>
-      <View style={styles.mainContainer}>
+      <View style={{ width: height * 1.2, height: height * 2 }}>
         <FlatList
           data={data}
           onScroll={onScroll}
           ref={flatListRef}
           showsVerticalScrollIndicator={false}
           snapToAlignment="center"
-          snapToInterval={HEIGHT_OF_ITEM}
+          snapToInterval={height}
           scrollEventThrottle={16}
           decelerationRate="fast"
           initialScrollIndex={0}
           keyExtractor={(item, index) => `WNPicker_${index.toString()}`}
           getItemLayout={(_, index) => ({
-            length: HEIGHT_OF_ITEM,
-            offset: HEIGHT_OF_ITEM * index,
+            length: height,
+            offset: height * index,
             index,
           })}
           renderItem={({ item }) => {
@@ -138,7 +131,7 @@ function WheelNumberPicker({
               <View
                 style={{
                   width: "100%",
-                  height: HEIGHT_OF_ITEM,
+                  height: height,
                   alignItems: "center",
                   justifyContent: "center",
                   borderBottomWidth: 1,
@@ -162,11 +155,7 @@ export default WheelNumberPicker;
 
 // TODO: change to props
 const styles = StyleSheet.create({
-  mainContainer: {
-    width: HEIGHT_OF_ITEM * 1.2,
-    height: HEIGHT_OF_LIST,
-    backgroundColor: "white",
-  },
+  mainContainer: {},
   number: {
     fontSize: 24,
   },
