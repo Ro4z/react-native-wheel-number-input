@@ -6,12 +6,15 @@ import {
   StyleSheet,
   Text,
   View,
+  StyleProp,
+  TextStyle,
 } from "react-native";
 
 type WheelNumberPickerProps = {
   minValue: number;
   maxValue: number;
   height: number;
+  textStyle?: StyleProp<TextStyle>;
   selectedValue?: number;
   onValueChange?: (value: number) => void;
 };
@@ -19,7 +22,8 @@ type WheelNumberPickerProps = {
 function WheelNumberPicker({
   minValue = 1,
   maxValue = 5,
-  height = 60,
+  height = 25,
+  textStyle,
   selectedValue,
   onValueChange,
 }: WheelNumberPickerProps): ReactElement {
@@ -138,9 +142,9 @@ function WheelNumberPicker({
                 }}
               >
                 {item === value ? (
-                  <Text style={[styles.number]}>{item}</Text>
+                  <Text style={textStyle}>{item}</Text>
                 ) : (
-                  <Text style={[styles.number, { color: "gray" }]}>{item}</Text>
+                  <Text style={[textStyle, { color: "gray" }]}>{item}</Text>
                 )}
               </View>
             );
