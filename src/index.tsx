@@ -131,8 +131,9 @@ function WheelNumberPicker({
         <View
           style={{
             marginTop: height / 1.5,
-            borderTopWidth: 1,
-            borderBottomWidth: 1,
+            borderTopWidth: dividerWidth,
+            borderBottomWidth: dividerWidth,
+            borderColor: dividerColor,
             height: height,
             width: height * 1.2,
           }}
