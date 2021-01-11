@@ -66,7 +66,7 @@ function WheelNumberPicker({
       animated: false,
     });
     currentYOffset.current = initialOffset.current;
-  }, [!!data]);
+  }, [data.length]);
 
   // for onValueChange props
   useEffect(() => {
