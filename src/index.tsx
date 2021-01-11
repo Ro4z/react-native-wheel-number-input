@@ -15,6 +15,7 @@ type WheelNumberPickerProps = {
   maxValue: number;
   height: number;
   textStyle?: StyleProp<TextStyle>;
+  unselectedTextStyle?: StyleProp<TextStyle>;
   dividerWidth?: ViewStyle["borderBottomWidth"];
   dividerColor?: ViewStyle["borderBottomColor"];
   selectedValue?: number;
@@ -26,6 +27,7 @@ function WheelNumberPicker({
   maxValue = 5,
   height = 25,
   textStyle,
+  unselectedTextStyle,
   dividerWidth = 1,
   dividerColor,
   selectedValue,
@@ -163,7 +165,13 @@ function WheelNumberPicker({
                 {item === value ? (
                   <Text style={textStyle}>{item}</Text>
                 ) : (
-                  <Text style={[textStyle, { color: "rgba(200,200,200,0.6)" }]}>
+                  <Text
+                    style={[
+                      textStyle,
+                      { color: "rgba(200,200,200,0.6)" },
+                      unselectedTextStyle,
+                    ]}
+                  >
                     {item}
                   </Text>
                 )}
