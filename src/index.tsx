@@ -119,6 +119,25 @@ function WheelNumberPicker({
   return (
     <>
       <View>{/* <Text>selected value: {value}</Text> */}</View>
+      <View
+        style={{
+          // borderWidth: 1,
+          // height: height,
+          // width: height * 1.2,
+
+          position: "absolute",
+        }}
+      >
+        <View
+          style={{
+            marginTop: height / 1.5,
+            borderTopWidth: 1,
+            borderBottomWidth: 1,
+            height: height,
+            width: height * 1.2,
+          }}
+        ></View>
+      </View>
       <View style={{ width: height * 1.2, height: height * 2 }}>
         <FlatList
           data={data}
@@ -144,8 +163,8 @@ function WheelNumberPicker({
                   height: height,
                   alignItems: "center",
                   justifyContent: "center",
-                  borderBottomWidth: dividerWidth,
-                  borderBottomColor: dividerColor,
+                  // borderBottomWidth: dividerWidth,
+                  // borderBottomColor: dividerColor,
                 }}
               >
                 {item === value ? (
