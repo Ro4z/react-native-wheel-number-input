@@ -117,24 +117,18 @@ function WheelNumberPicker({
   };
 
   return (
-    <>
+    <View style={{ alignItems: "center", justifyContent: "center" }}>
       {/* view component for picker divider */}
       <View
         style={{
           position: "absolute",
+          borderTopWidth: dividerWidth,
+          borderBottomWidth: dividerWidth,
+          borderColor: dividerColor,
+          height: height,
+          width: height * 1.2,
         }}
-      >
-        <View
-          style={{
-            marginTop: height / 1.5,
-            borderTopWidth: dividerWidth,
-            borderBottomWidth: dividerWidth,
-            borderColor: dividerColor,
-            height: height,
-            width: height * 1.2,
-          }}
-        />
-      </View>
+      />
       <View style={{ width: height * 1.2, height: height * 2 }}>
         <FlatList
           data={dataArray}
@@ -182,7 +176,7 @@ function WheelNumberPicker({
           }}
         />
       </View>
-    </>
+    </View>
   );
 }
 
